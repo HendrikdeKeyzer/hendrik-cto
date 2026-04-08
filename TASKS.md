@@ -171,7 +171,24 @@ Deploy the dashboard to GitHub Pages so potential clients can see Hendrik's resu
 
 ### Task 2.1: Intake Form
 
-**Status:** ⏳ Backlog
+**Status:** ✅ Done (commit `feat: Task 2.1 — consultancy intake form + PVWATTS + PDF + Stripe`)
+
+**Build notes:**
+- React 2-step intake wizard at `/consultancy` route in dashboard
+- FastAPI backend in `consultancy/api/` — PVWATTS v8, Nominatim geocoding, ReportLab PDF, Stripe
+- Preview PDF generated + emailed on form submit; full report unlocked post-payment
+- Stripe checkout with iDEAL (NL-first) + card; webhook handler notifies Hendrik on payment
+- PDF tested locally: 4.5 KB preview PDF ✅
+- Build passes: 290 KB / 91 KB gzip ✅
+- Pushed to GitHub ✅
+
+**Hendrik/Richard must do:**
+1. Get free NREL PVWatts API key: https://developer.nrel.gov/signup/
+2. Set up Stripe account + get keys (test mode first)
+3. Copy `consultancy/api/.env.example` → `.env`, fill in keys
+4. Deploy backend (Railway/Render recommended — see consultancy/README.md)
+5. Set `VITE_CONSULTANCY_API=https://your-backend-url` in dashboard env/secrets
+6. Add GitHub Actions secret + redeploy dashboard for `/consultancy` route
 
 **Brief:**
 Build a form that collects homeowner data → auto-generates a PV sizing proposal.
