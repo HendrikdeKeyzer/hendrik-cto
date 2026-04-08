@@ -4,6 +4,7 @@ import {
   currentPrice,
   mwhToKwh,
 } from '../lib/entsoe.js';
+import { useStaticData, IS_PROD } from '../lib/staticData.js';
 import './PriceCard.css';
 
 const TOKEN = import.meta.env.VITE_ENTSOE_TOKEN;
@@ -11,7 +12,25 @@ const TOKEN = import.meta.env.VITE_ENTSOE_TOKEN;
 // Refresh once per hour — day-ahead prices don't change intraday.
 const REFRESH_MS = 60 * 60 * 1000;
 
+/** Production wrapper: reads from static data.json */
+function PriceCardStatic() {
+  const { status, data, error } = useStaticData();
+  if (status === 'loading') return <div className="price-card"><div className="price-card__label">NL stroomprijs — nu</div><div className="price-card__body price-card__body--muted">Prijzen laden…</div></div>;
+  if (status === 'error') return <div className="price-card"><div className="price-card__label">NL stroomprijs — nu</div><div className="price-card__body price-card__body--error">{error}</div></div>;
+  const { revenue } = data;
+  // Build a fake current-price object from the static snapshot
+  const priceEurMwh = (revenue?.currentPriceEurKwh ?? 0) * 1000;
+  const fakeEntry = { priceEurMwh, start: new Date(data._updatedAt) };
+  return (
+    <div className="price-card">
+      <div className="price-card__label">NL stroomprijs — nu</div>
+      <PriceBody current={fakeEntry} fetchedAt={new Date(data._updatedAt)} />
+    </div>
+  );
+}
+
 export default function PriceCard() {
+  if (IS_PROD) return <PriceCardStatic />;
   const [state, setState] = useState({ status: 'loading' });
 
   useEffect(() => {

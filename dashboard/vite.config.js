@@ -7,6 +7,9 @@ export default defineConfig(({ mode }) => {
   const haBase = env.VITE_HA_BASE || 'https://ha.richardheesen.nl';
 
   return {
+    // GitHub Pages serves from /hendrik-cto/ — set base so asset paths resolve.
+    // Override with VITE_BASE env var if deploying elsewhere.
+    base: env.VITE_BASE || (mode === 'production' ? '/hendrik-cto/' : '/'),
     plugins: [react()],
     server: {
       proxy: {

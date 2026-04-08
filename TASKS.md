@@ -123,7 +123,7 @@ Connect Hendrik's actual solar/battery/meter data to the dashboard.
 
 ### Task 1.3: Make it Public (GitHub Pages)
 
-**Status:** 🔴 Not Started
+**Status:** ✅ Done (commit `ci: GitHub Actions deployment`)
 
 **Brief:**
 Deploy the dashboard to GitHub Pages so potential clients can see Hendrik's results live.
@@ -150,6 +150,20 @@ Deploy the dashboard to GitHub Pages so potential clients can see Hendrik's resu
 **Notes:**
 - GitHub free tier; no auth needed
 - Use environment secrets for API keys
+
+**Build notes:**
+- Static JSON pattern: `scripts/fetch-data.mjs` runs server-side in Actions, writes `dashboard/public/data.json`
+- Components detect `import.meta.env.PROD` and switch between live API (dev) and data.json (prod)
+- Two workflows: `deploy.yml` (build+deploy on push) + `fetch-data.yml` (cron every 15 min)
+- Vite base set to `/hendrik-cto/` for GitHub Pages asset paths
+- "How it works" explainer section added to App.jsx
+- Build: 235KB / 73KB gzip — no API tokens in bundle ✅
+
+**Required GitHub setup (Hendrik/Richard must do once):**
+1. Repo settings → Pages → Source: "GitHub Actions"
+2. Repo settings → Secrets → Add: `HA_BASE`, `HA_TOKEN`, `ENTSOE_TOKEN`
+3. Optional: `GH_PAT` (Personal Access Token with `repo` scope) for the data-fetch commit push; falls back to `github.token` but that may lack write perms in some setups
+4. Push this commit → Actions will run → site live at https://hendrikdekeyzer.github.io/hendrik-cto/
 
 ---
 

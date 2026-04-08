@@ -1,0 +1,46 @@
+name: Fetch Live Energy Data
+
+on:
+  schedule:
+    # Every 15 minutes — matches the frontend refresh cadence.
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to commit data.json back to repo
+
+jobs:
+  fetch:
+    name: Fetch & commit data.json
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Use a token that can push back to main
+          token: ${{ secrets.GH_PAT || github.token }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch data from Home Assistant
+        env:
+          HA_BASE: ${{ secrets.HA_BASE }}
+          HA_TOKEN: ${{ secrets.HA_TOKEN }}
+          ENTSOE_TOKEN: ${{ secrets.ENTSOE_TOKEN }}
+        run: node scripts/fetch-data.mjs
+
+      - name: Commit updated data.json
+        run: |
+          git config user.name "hendrik-cto[bot]"
+          git config user.email "hendrik-cto@users.noreply.github.com"
+          git add dashboard/public/data.json
+          # Only commit if data.json actually changed
+          if git diff --staged --quiet; then
+            echo "No changes to data.json — skipping commit."
+          else
+            git commit -m "data: update energy snapshot $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            git push
+          fi

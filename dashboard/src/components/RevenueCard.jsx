@@ -6,7 +6,45 @@ import {
   whToKwh,
   formatEuro,
 } from '../lib/revenue.js';
+import { useStaticData, IS_PROD } from '../lib/staticData.js';
 import './RevenueCard.css';
+
+/** Production wrapper: reads from static data.json */
+function RevenueCardStatic() {
+  const { status, data, error } = useStaticData();
+  if (status === 'loading') return <div className="revenue-card revenue-card--muted">Omzet laden…</div>;
+  if (status === 'error') return <div className="revenue-card revenue-card--error">{error}</div>;
+  const r = data.revenue ?? {};
+  const e = data.energy ?? {};
+  const liveRate = r.revenuePerHourEur ?? 0;
+  const todayEur = r.todayEstimateEur ?? 0;
+  const priceNow = r.currentPriceEurKwh ?? 0;
+  const netExportKwh = (e.productionTodayKwh ?? 0) - (e.consumptionTodayKwh ?? 0);
+  const updatedAt = new Date(data._updatedAt);
+  const earning = liveRate >= 0;
+  const todayEarning = todayEur >= 0;
+  return (
+    <div className="revenue-card">
+      <div className="revenue-card__label">Omzet — live</div>
+      <div className={`revenue-card__live ${earning ? 'revenue-card__live--earn' : 'revenue-card__live--pay'}`}>
+        {earning ? '+' : ''}{formatEuro(liveRate, 3)}
+        <span className="revenue-card__unit">/uur</span>
+      </div>
+      <div className="revenue-card__hint">bij huidige prijs {formatEuro(priceNow, 4)}/kWh</div>
+      <div className="revenue-card__divider" />
+      <div className="revenue-card__today">
+        <div className="revenue-card__today-label">Schatting vandaag</div>
+        <div className={`revenue-card__today-value ${todayEarning ? 'revenue-card__today-value--earn' : 'revenue-card__today-value--pay'}`}>
+          {todayEarning ? '+' : ''}{formatEuro(todayEur, 2)}
+        </div>
+        <div className="revenue-card__today-detail">
+          netto {netExportKwh.toLocaleString('nl-NL', { maximumFractionDigits: 1 })} kWh
+        </div>
+      </div>
+      <div className="revenue-card__meta">snapshot {updatedAt.toLocaleTimeString('nl-NL')} · update elke 15 min</div>
+    </div>
+  );
+}
 
 // We use HA's EnergyZero integration for the price (already in €/kWh).
 // PriceCard uses ENTSO-E directly; both should agree closely since EnergyZero
@@ -38,6 +76,8 @@ const ENTITIES = [
 ];
 
 export default function RevenueCard() {
+  if (IS_PROD) return <RevenueCardStatic />;
+  // Dev: live HA API calls below
   const [state, setState] = useState({ status: 'loading' });
 
   useEffect(() => {

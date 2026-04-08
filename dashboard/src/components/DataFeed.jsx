@@ -1,7 +1,41 @@
 import { useEffect, useState } from 'react';
 import { fetchStates } from '../lib/homeassistant.js';
 import { whToKwh, formatPower, formatEnergy } from '../lib/revenue.js';
+import { useStaticData, IS_PROD } from '../lib/staticData.js';
 import './DataFeed.css';
+
+/** Production wrapper: reads from static data.json */
+function DataFeedStatic() {
+  const { status, data, error } = useStaticData();
+  if (status === 'loading') return <div className="datafeed datafeed--muted">Hendrik's data laden…</div>;
+  if (status === 'error') return <div className="datafeed datafeed--error">{error}</div>;
+  const e = data.energy ?? {};
+  const exporting = (e.netW ?? 0) < 0;
+  const flowLabel = exporting ? 'Exporteert naar net' : 'Importeert van net';
+  const flowValue = formatPower(Math.abs(e.netW ?? 0));
+  const flowClass = exporting ? 'datafeed__flow--export' : 'datafeed__flow--import';
+  const updatedAt = new Date(data._updatedAt);
+  return (
+    <div className="datafeed">
+      <div className="datafeed__row">
+        <Stat label="Productie nu" value={formatPower(e.productionW ?? 0)} accent="green" />
+        <Stat label="Verbruik nu" value={formatPower(e.consumptionW ?? 0)} accent="amber" />
+        <Stat label="Batterij" value={`${(e.batteryPct ?? 0).toFixed(0)} %`} accent="blue" />
+      </div>
+      <div className={`datafeed__flow ${flowClass}`}>
+        <div className="datafeed__flow-label">{flowLabel}</div>
+        <div className="datafeed__flow-value">{flowValue}</div>
+      </div>
+      <div className="datafeed__row datafeed__row--small">
+        <Stat label="Productie vandaag" value={formatEnergy(e.productionTodayKwh ?? 0)} />
+        <Stat label="Verbruik vandaag" value={formatEnergy(e.consumptionTodayKwh ?? 0)} />
+      </div>
+      <div className="datafeed__meta">
+        snapshot {updatedAt.toLocaleTimeString('nl-NL')} · update elke 15 min
+      </div>
+    </div>
+  );
+}
 
 // Default Enphase Envoy entities for Hendrik. Override via env if needed.
 const ENV = import.meta.env;
@@ -37,6 +71,8 @@ const ENTITIES = [
 ];
 
 export default function DataFeed() {
+  if (IS_PROD) return <DataFeedStatic />;
+  // Dev: live HA API calls below
   const [state, setState] = useState({ status: 'loading' });
 
   useEffect(() => {
