@@ -1,37 +1,14 @@
-# Dependencies
 node_modules/
-.venv/
+.env
+.env.local
+.env.*.local
+dist/
+build/
+*.log
+.DS_Store
+.vscode/
+.idea/
 venv/
 __pycache__/
 *.pyc
-
-# Build outputs
-dist/
-build/
-.next/
-out/
-*.egg-info/
-
-# Env / secrets
-.env
-.env.*
-!.env.example
-*.key
-*.pem
-credentials.json
-
-# Editor / OS
-.DS_Store
-.idea/
-.vscode/
-*.swp
-*~
-
-# Logs
-*.log
-logs/
-
-# Local data
-*.sqlite
-*.db
-data/local/
+.git

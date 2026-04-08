@@ -1,50 +1,56 @@
-# Hendrik CTO
+# Hendrik CTO — Energy Commerce Platform
 
-Engineering workspace for **Hendrik** — Dutch AI-powered smart home.
+AI-powered smart home making money from energy trading, consultancy, and data products.
 
-## Mission
+## Quick Start
 
-Build the tech that makes money:
+```bash
+cd hendrik-cto
+npm install
+npm run dev
+```
 
-1. **Energy trading** — ENTSO-E market + Tennet balancing
-2. **Smart home consultancy** — blueprint for others
-3. **Data products** — energy reports, automation templates
+## Project Structure
+
+```
+/
+├── dashboard/       # Hendrik's energy dashboard (React)
+├── consultancy/     # Intake form → PDF proposal automation
+├── integrations/    # ENTSO-E, Tennet, Stripe APIs
+├── ha-addons/       # Home Assistant custom integrations
+├── utils/           # Shared utilities (logging, KPIs, etc.)
+└── scripts/         # Deployment, monitoring
+```
+
+## Current Sprints
+
+- [ ] Sprint 1: Energy dashboard (ENTSO-E integration)
+- [ ] Sprint 2: Consultancy automation (Stripe + PDF generation)
+- [ ] Sprint 3: Tennet Home Assistant integration
+
+## How We Work
+
+**Hendrik briefs via git commits/issues.** Claude Code reads, builds, commits back.
+
+**Workflow:**
+1. Hendrik writes task → `TASKS.md` or GitHub Issues
+2. Claude Code reads, implements, commits
+3. Hendrik reviews, auto-deploys or sends feedback
+4. Loop
+
+## Tech Stack
+
+- **Dashboard:** Node.js + React + InfluxDB
+- **Automation:** Python + Zapier/Make
+- **Home Assistant:** Custom Python components
+- **Deployment:** GitHub Actions → Vercel / Docker
 
 ## Team
 
-- **Richard** — owner (baas)
-- **Hendrik** — AI coordinator
-- **Claude Code** — engineer (builds, commits, deploys)
+- **Richard** — Owner, product decisions
+- **Hendrik** — Operations, task briefs, integrations
+- **Claude Code** — Engineering, builds everything
 
-## Workflow
+---
 
-1. Hendrik briefs tasks via chat
-2. Claude Code builds, commits, deploys
-3. Hendrik integrates results back into operations
-
-Ship fast. No perfectionism. Ship, measure, iterate.
-
-## Current priorities
-
-| # | Project | Status |
-|---|---------|--------|
-| 1 | Energy dashboard (public, live) | todo |
-| 2 | Consultancy automation (intake → PDF) | todo |
-| 3 | Tennet Home Assistant integration | todo |
-| 4 | Revenue KPI tracker | todo |
-
-## Layout
-
-```
-hendrik-cto/
-├── projects/   # one folder per shipped thing
-├── docs/       # architecture, decisions, briefs
-└── scripts/    # one-off tools, deploy helpers
-```
-
-## Related
-
-- Hendrik identity: `~/.openclaw/workspace/IDENTITY.md`
-- Hendrik memory: `~/.openclaw/workspace/MEMORY.md`
-- Energy dashboard (existing): `~/energie-dashboard/`
-- Home Assistant MCP: `~/ha-mcp-docker/`
+**Status:** Pre-MVP. Building Sprint 1.
