@@ -1,0 +1,57 @@
+.price-card {
+  background: #14151a;
+  border: 1px solid #2a2d36;
+  border-radius: 16px;
+  padding: 28px 32px;
+  min-width: 320px;
+  color: #f5f6f8;
+  font-family: -apple-system, system-ui, sans-serif;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.price-card__label {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a8f9e;
+  margin-bottom: 14px;
+}
+
+.price-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.price-card__body--muted {
+  color: #8a8f9e;
+}
+
+.price-card__body--error {
+  color: #ff6b6b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.price-card__primary {
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.price-card__unit {
+  font-size: 18px;
+  font-weight: 400;
+  color: #8a8f9e;
+}
+
+.price-card__secondary {
+  font-size: 14px;
+  color: #b8bdcc;
+}
+
+.price-card__meta {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #6a6f7d;
+}
