@@ -12,8 +12,11 @@
 - Dev proxy in `vite.config.js` (`/api/entsoe` → ENTSO-E) — production deploy needs a real backend, see Task 1.3
 - PriceCard shows €/kWh primary (per Hendrik MEMORY.md) + €/MWh secondary
 - Smoke test: `node scripts/test-parser.mjs`
-- Token required: see `dashboard/.env.example` for how to request one (~3 working days)
-- ⚠️  No real ENTSO-E call has been made yet — needs the token first
+- ✅ **BLOCKER RESOLVED:** ENTSO-E token now in `.env` — test it:
+  ```bash
+  cd dashboard && npm install && npm run dev
+  ```
+  Dashboard: http://localhost:5173 (should show live NL prices)
 
 
 **Brief:**
@@ -48,7 +51,7 @@ Set up the Node.js + React skeleton for Hendrik's energy dashboard.
 
 ### Task 1.2: Hendrik's Data Integration
 
-**Status:** 🔴 Not Started
+**Status:** 🟠 In Progress
 
 **Brief:**
 Connect Hendrik's actual solar/battery/meter data to the dashboard.
