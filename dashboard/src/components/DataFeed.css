@@ -1,0 +1,108 @@
+.datafeed {
+  background: #14151a;
+  border: 1px solid #2a2d36;
+  border-radius: 16px;
+  padding: 28px 32px;
+  min-width: 380px;
+  max-width: 480px;
+  color: #f5f6f8;
+  font-family: -apple-system, system-ui, sans-serif;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.datafeed--muted {
+  color: #8a8f9e;
+}
+
+.datafeed--error {
+  color: #ff6b6b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.datafeed__row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.datafeed__row--small .stat__value {
+  font-size: 18px;
+}
+
+.stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat__label {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a8f9e;
+}
+
+.stat__value {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.stat--green .stat__value {
+  color: #4ade80;
+}
+
+.stat--amber .stat__value {
+  color: #fbbf24;
+}
+
+.stat--blue .stat__value {
+  color: #60a5fa;
+}
+
+.datafeed__flow {
+  margin: 16px 0 20px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.datafeed__flow--export {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.datafeed__flow--import {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.datafeed__flow-label {
+  font-size: 13px;
+  color: #b8bdcc;
+}
+
+.datafeed__flow-value {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.datafeed__flow--export .datafeed__flow-value {
+  color: #4ade80;
+}
+
+.datafeed__flow--import .datafeed__flow-value {
+  color: #fbbf24;
+}
+
+.datafeed__meta {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #6a6f7d;
+  text-align: center;
+}

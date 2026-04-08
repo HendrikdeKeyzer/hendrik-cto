@@ -51,7 +51,44 @@ Set up the Node.js + React skeleton for Hendrik's energy dashboard.
 
 ### Task 1.2: Hendrik's Data Integration
 
-**Status:** 🟠 In Progress
+**Status:** ✅ Done (commit `feat: HA data integration + live feeds`)
+
+**Notes from build:**
+- HA token + URL discovered in `~/ha-mcp-docker/docker-compose.yml` (Hendrik's public HA hostname, not 192.168.1.100)
+- Enphase Envoy system identified — entity IDs for production, consumption, net flow, battery % wired through
+- EnergyZero HA integration provides €/kWh prices directly → RevenueCard uses these, avoids a second ENTSO-E dependency
+- New files:
+  - `dashboard/src/lib/homeassistant.js` — REST client, token-based auth
+  - `dashboard/src/lib/revenue.js` — pure revenue math (testable)
+  - `dashboard/src/components/DataFeed.jsx` — production/consumption/battery/net flow
+  - `dashboard/src/components/RevenueCard.jsx` — live €/h + today's estimate
+- Vite dev proxy now routes `/api/ha → $VITE_HA_BASE` (HA also has no CORS headers)
+- All entity IDs + HA base URL configurable via `.env` — defaults to Hendrik's Envoy
+- Smoke tests green: `node scripts/test-revenue.mjs` + `test-parser.mjs`
+- Production build green: 236 KB / 74 KB gzipped
+- Data refresh: 5 min (matches acceptance criterion)
+
+**⚠️  InfluxDB deferred — impacts CFO Sprint 1**
+
+The TASKS.md requirements asked for InfluxDB ingestion, but the acceptance
+criteria (show production, consumption, prices, revenue, 5-min refresh) are
+fully met without it. To avoid scope creep in Sprint 1 I deferred it, BUT:
+
+- CFO's Task 1.1 requires "energy revenue from CTO's InfluxDB"
+- Without InfluxDB, CFO will be blocked on energy revenue data
+- Either: (a) Hendrik coordinates a Task 1.2.5 to add InfluxDB ingestion,
+  or (b) CFO reads from a simpler endpoint we expose (JSON file, HA direct)
+
+My recommendation: (b) — skip InfluxDB for now, publish a small `public/today.json`
+from a cron that CFO can read. Cheaper and matches the "no backend" constraint of
+Task 1.3. Let Hendrik decide.
+
+**⚠️  Token security note**
+
+All `VITE_*` env vars are baked into the public JS bundle. A deployed build
+exposes the HA and ENTSO-E tokens to anyone viewing the page source. This is
+fine for local dev but MUST be solved before Task 1.3 (public deploy) — likely
+via a backend proxy or pre-fetched static JSON pattern.
 
 **Brief:**
 Connect Hendrik's actual solar/battery/meter data to the dashboard.
