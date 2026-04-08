@@ -1,15 +1,36 @@
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import PriceCard from './components/PriceCard.jsx';
 import DataFeed from './components/DataFeed.jsx';
 import RevenueCard from './components/RevenueCard.jsx';
+import ConsultancyPage from './pages/ConsultancyPage.jsx';
 import './App.css';
 
-export default function App() {
+function Nav() {
+  const loc = useLocation();
+  const base = import.meta.env.BASE_URL || '/';
+
+  const linkStyle = (path) => ({
+    color: loc.pathname.includes(path) ? '#F9A825' : 'rgba(255,255,255,0.85)',
+    textDecoration: 'none',
+    fontWeight: loc.pathname.includes(path) ? 700 : 400,
+    fontSize: 14,
+    padding: '4px 10px',
+    borderRadius: 4,
+    background: loc.pathname.includes(path) ? 'rgba(249,168,37,0.15)' : 'transparent',
+    transition: 'all 0.15s',
+  });
+
   return (
-    <div className="app">
-      <header className="app__header">
-        <div className="app__brand">Hendrik</div>
-        <div className="app__tagline">Het slimme huis · Energie dashboard</div>
-      </header>
+    <nav style={{ display: 'flex', gap: 4, marginLeft: 'auto' }}>
+      <Link to="/" style={linkStyle('__home__')}>Dashboard</Link>
+      <Link to="/consultancy" style={linkStyle('consultancy')}>☀️ Get Quote</Link>
+    </nav>
+  );
+}
+
+function DashboardPage() {
+  return (
+    <>
       <main className="app__main">
         <div className="app__grid">
           <PriceCard />
@@ -48,14 +69,37 @@ export default function App() {
           <div className="explainer__item">
             <span className="explainer__icon">💼</span>
             <strong>Wil jij dit ook?</strong>
-            <p>Hendrik helpt je een vergelijkbaar systeem te ontwerpen voor jouw woning — van PV-sizing tot Home Assistant setup. Neem contact op voor een vrijblijvend advies.</p>
+            <p>Hendrik helpt je een vergelijkbaar systeem te ontwerpen. <Link to="/consultancy" style={{ color: '#2E7D32', fontWeight: 600 }}>Bereken jouw besparing →</Link></p>
           </div>
         </div>
       </section>
       <footer className="app__footer">
         Hendrik · Het slimme huis · Open source op{' '}
         <a href="https://github.com/HendrikdeKeyzer/hendrik-cto" target="_blank" rel="noopener noreferrer">GitHub</a>
+        {' · '}
+        <Link to="/consultancy" style={{ color: '#F9A825' }}>☀️ Solar Quote</Link>
       </footer>
-    </div>
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <div className="app">
+        <header className="app__header" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <div className="app__brand">Hendrik</div>
+            <div className="app__tagline">Het slimme huis · Energie dashboard</div>
+          </div>
+          <Nav />
+        </header>
+
+        <Routes>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/consultancy" element={<ConsultancyPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
